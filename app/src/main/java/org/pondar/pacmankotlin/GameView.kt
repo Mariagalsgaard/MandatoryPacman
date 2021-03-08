@@ -1,12 +1,15 @@
 package org.pondar.pacmankotlin
 
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
+import kotlin.random.Random
+
 
 
 //note we now create our own view class that extends the built-in View class
@@ -30,6 +33,7 @@ class GameView : View {
 
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+
 
     //In the onDraw we put all our code that should be
     //drawn whenever we update the screen.
@@ -56,6 +60,12 @@ class GameView : View {
                 game?.pacy!!.toFloat(), paint)
 
         //TODO loop through the list of goldcoins and draw them here
+        for (coin in game!!.coins) {
+            if (!coin.taken) {
+                canvas.drawBitmap(game!!.goldCoin, coin.goldcoinx.toFloat(), coin.goldcoiny.toFloat(), paint)
+            }
+        }
+
 
         game?.doCollisionCheck()
         super.onDraw(canvas)
