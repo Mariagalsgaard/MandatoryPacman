@@ -22,8 +22,8 @@ class Game(private var context: Context, view: TextView) {
 
     private var pointsView: TextView = view
     private var points: Int = 0
-    var running = false
-    var direction: Int = 0
+    var running = false //set fra martins timeropgave
+    var direction = 1 //set fra martins timeropgave
 
     //bitmap of the pacman
     var pacBitmap: Bitmap
@@ -59,7 +59,7 @@ class Game(private var context: Context, view: TextView) {
     //TODO initialize goldcoins also here
     fun initializeGoldcoins() {
 
-        /* my try on using random() - but not working
+        /* my try on using random() (fra link på github....) - but not working
         for (coin in 0..4){
             val coin = GoldCoin(0, 0, false)
             coin.goldcoinx = Random().nextInt(950)
@@ -95,7 +95,7 @@ class Game(private var context: Context, view: TextView) {
 
     }
 
-
+    //mangler noget her..
     fun newGame() {
         pacx = 50
         pacy = 400 //just some starting coordinates - you can change this.
@@ -106,7 +106,7 @@ class Game(private var context: Context, view: TextView) {
         gameView?.invalidate() //redraw screen
         coins.clear()
         running = true
-        direction = 0
+        direction = 1
     }
 
     fun setSize(h: Int, w: Int) {
@@ -153,6 +153,10 @@ class Game(private var context: Context, view: TextView) {
 
     }
 
+
+
+    //Alt nedenunder er med kæmpe hjælp fra Annalee. Ved ikke helt om jeg vil kunne forklare det
+    //Det er den "ikke nemme" løsning - så måske vi skal lave det om? - jeg har en tegning du skal se
 
     //TODO check if the pacman touches a gold coin
     //and if yes, then update the neccesseary data

@@ -56,25 +56,13 @@
         android:text="@string/points"
         android:textSize="20sp" />
 
-    <TextView
-        android:id="@+id/textView"
+    <Button
+        android:id="@+id/pauseButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="35dp"
-        android:text="@string/timerValue"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/timeLeft"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="72dp"
-        android:text="@string/timerLeftText"
-        android:textSize="20sp"/>
+        android:layout_alignParentEnd="true"
+        android:text="@string/p" />
 
     <Button
         android:id="@+id/continueButton"
@@ -82,18 +70,25 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
+        android:layout_marginEnd="94dp"
         android:text="@string/c" />
 
-    <Button
-        android:id="@+id/pauseButton"
+    <TextView
+        android:id="@+id/timerValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="96dp"
-        android:text="@string/p" />
+        android:layout_marginTop="20sp"
+        android:text="@string/timerValue" />
 
-
-
+    <TextView
+        android:id="@+id/timeLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="44dp"
+        android:text="@string/timeLeft" />
 
 </RelativeLayout>

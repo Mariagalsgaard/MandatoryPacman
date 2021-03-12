@@ -10,6 +10,6 @@
     <string name="c">Continue</string>
     <string name="p">Pause</string>
     <string name="timerValue">Timer Value: %1$d</string>
-    <string name="timerLeftText">Time Left: %1$d</string>
+    <string name="timeLeft">Time Left: %1$d</string>
 
 </resources>

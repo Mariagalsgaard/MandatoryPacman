@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View.OnClickListener
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
@@ -16,9 +17,10 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
     //reference to the game class.
     private var game: Game? = null
-    private var myTimer: Timer = Timer()
-    private var gameTimer: Timer = Timer()
-    private var counter: Int = 60
+
+    var myTimer: Timer = Timer() //set fra martins timeropgave
+    var gameTimer: Timer = Timer()
+    var counter : Int = 60 //set fra martins timeropgave
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +28,8 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         //makes sure it always runs in portrait mode
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         setContentView(R.layout.activity_main)
+        continueButton.setOnClickListener(this) //set fra martins timeropgave
+        pauseButton.setOnClickListener(this) //set fra martins timeropgave
 
         game = Game(this, pointsView)
 
@@ -33,21 +37,6 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         game?.setGameView(gameView)
         gameView.setGame(game)
         game?.newGame()
-
-        continueButton.setOnClickListener(this)
-        pauseButton.setOnClickListener(this)
-
-
-        //make a new timer
-        game?.running = true //should the game be running?
-        //We will call the timer 5 times each second
-        myTimer.schedule(object : TimerTask() {
-            override fun run() {
-                timerMethod()
-            }
-
-        }, 0, 100) //0 indicates we start now, 200
-        //is the number of miliseconds between each call
 
 
         moveRight.setOnClickListener {
@@ -66,113 +55,105 @@ class MainActivity : AppCompatActivity(), OnClickListener {
             game?.direction = 3
         }
 
-
-        // my game timer
+        //make a new timer  - fra Martins timeropgaver
         game?.running = true
+        myTimer.schedule(object : TimerTask() {
+            override fun run() {
+                timerMethod()
+            }
+
+        }, 0, 100)
+
+
+        //my new game timer
         gameTimer.schedule(object : TimerTask() {
             override fun run() {
-                timerSomething()
+                timerTimeLeft()
             }
-        }, 0, 1000)
 
+        }, 0, 1000)
     }
 
-
+    //set fra martins timeropgave
     override fun onStop() {
         super.onStop()
-        //just to make sure if the app is killed, that we stop the timer.
         myTimer.cancel()
+        gameTimer.cancel()
     }
 
-    private fun timerMethod() {
-        //We call the method that will work with the UI
-        //through the runOnUiThread method.
-        this.runOnUiThread(timerTick)
-    }
 
-    private fun timerSomething() {
-        //We call the method that will work with the UI
-        //through the runOnUiThread method.
+    //til min nye timer
+    private fun timerTimeLeft() {
         this.runOnUiThread(timerSeconds)
     }
 
-    private val timerSeconds = Runnable {
-        if (game!!.running) {
-            counter--
-            //update the counter - notice this is NOT seconds in this example
-            //you need TWO counters - one for the timer count down that will
-            // run every second and one for the pacman which need to run
-            //faster than every second
-            textView.text = getString(R.string.timerLeftText, counter)
+    //set fra martins timeropgave
+    private fun timerMethod() {
+        this.runOnUiThread(timerTick)
+    }
 
-            if (game!!.direction==1)
-            { // move right
-                game!!.movePacmanRight(20)
+
+    //til min nye timer
+    private val timerSeconds = Runnable {
+
+        if (game!!.running) {
+            timeLeft.text = resources.getString(R.string.timeLeft, counter)
+            counter--
+            if (game?.direction == 1) {
+                counter--
+                timeLeft.text = resources.getString(R.string.timeLeft, counter)
             }
-            else if (game!!.direction==2)
-            { //move left
-                game!!.movePacmanLeft(20)
+            if (game?.direction == 2) {
+                counter--
+                timeLeft.text = resources.getString(R.string.timeLeft, counter)
             }
-            else if (game!!.direction==3)
-            { //move up
-                game!!.movePacmanUp(20)
+            if (game?.direction == 3) {
+                counter--
+                timeLeft.text = resources.getString(R.string.timeLeft, counter)
             }
-            else if (game!!.direction==4)
-            { //move down
-                game!!.movePacmanDown(20)
+            if (game?.direction == 4) {
+                counter--
+                timeLeft.text = resources.getString(R.string.timeLeft, counter)
             }
-        } else if (game!!.running && counter >= 0) {
-            Toast.makeText(this, "You've lost!!", Toast.LENGTH_LONG).show()
-            myTimer.cancel()
-            gameTimer.cancel()
         }
     }
 
 
+    //set fra martins timeropgave
     private val timerTick = Runnable {
-        //This method runs in the same thread as the UI.
-        // so we can draw
         if (game!!.running) {
             counter++
-            //update the counter - notice this is NOT seconds in this example
-            //you need TWO counters - one for the timer count down that will
-            // run every second and one for the pacman which need to run
-            //faster than every second
-            textView.text = getString(R.string.timerValue, counter)
+            timerValue.text = resources.getString(R.string.timerValue, counter)
 
-            if (game!!.direction==1)
-            { // move right
-                game!!.movePacmanRight(20)
+            if (game?.direction==1)
+            {
+                game?.movePacmanRight(20)
             }
-            else if (game!!.direction==2)
-            { //move left
-                game!!.movePacmanLeft(20)
+            else if (game?.direction == 2)
+            {
+                game?.movePacmanLeft(20)
             }
-            else if (game!!.direction==3)
-            { //move up
-                game!!.movePacmanUp(20)
+            else if (game!!.direction == 3)
+            {
+                game?.movePacmanUp(20)
             }
-            else if (game!!.direction==4)
-            { //move down
-                game!!.movePacmanDown(20)
+            else if (game?.direction == 4)
+            {
+                game?.movePacmanDown(20)
             }
         }
     }
 
-    //if anything is pressed - we do the checks here
+    //set fra martins timeropgave
     override fun onClick(v: View) {
         if (v.id == R.id.continueButton) {
-            game!!.running = true
+            game?.running = true
         } else if (v.id == R.id.pauseButton) {
-            game!!.running = false
-        } else if (v.id == R.id.action_newGame) {
-            game!!.newGame()
-            counter = 0
-            game!!.running = false
-            textView.text = getString(R.string.timerValue, counter)
-            textView.text = getString(R.string.timerLeftText, counter)
+            game?.running = false
         }
     }
+
+
 
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -192,6 +173,8 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         } else if (id == R.id.action_newGame) {
             Toast.makeText(this, "New Game clicked", Toast.LENGTH_LONG).show()
             game?.newGame()
+            counter = 60
+            timerValue.text = getString(R.string.timerValue, counter)
             return true
         }
         return super.onOptionsItemSelected(item)
