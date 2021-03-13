@@ -28,6 +28,7 @@ class Game(private var context: Context, view: TextView) {
     //bitmap of the pacman
     var pacBitmap: Bitmap
     var goldCoin: Bitmap
+    var ghost: Bitmap
     var pacx: Int = 0
     var pacy: Int = 0
 
@@ -36,8 +37,9 @@ class Game(private var context: Context, view: TextView) {
     //did we initialize the coins?
     var coinsInitialized = false
 
-    //the list of goldcoins - initially empty
+    //the list of goldcoins and enemies
     var coins = ArrayList<GoldCoin>()
+    var enemies = ArrayList<Enemy>()
 
     //a reference to the gameview
     private var gameView: GameView? = null
@@ -50,23 +52,76 @@ class Game(private var context: Context, view: TextView) {
     init {
         pacBitmap = BitmapFactory.decodeResource(context.resources, R.drawable.pacman)
         goldCoin = BitmapFactory.decodeResource(context.resources, R.drawable.goldcoin)
+        ghost = BitmapFactory.decodeResource(context.resources, R.drawable.ghost)
     }
 
     fun setGameView(view: GameView) {
         this.gameView = view
     }
 
+
+    //initialize enemies
+    fun intializeEnemies() {
+
+        /*
+        //random fra Ruth - virker ikke/app crasher
+        var minX: Int = 0
+        var maxX: Int = w - ghost.width
+        var minY: Int = 0
+        var maxY: Int = h - ghost.width
+        val random = Random
+        for (i in 0..10) {
+            var randomX: Int = random.nextInt(maxX - minX + 1) + minX
+            var randomY: Int = random.nextInt(maxY - minY + 1) + minY
+            enemies.add(Enemy(randomX, randomY, false))
+        }
+        */
+
+
+        //random fra github link
+        val enemy = Enemy(0, 0, false)
+        enemy.enemyx = Random.nextInt(900)
+        enemy.enemyy = Random.nextInt(400)
+        enemies.add(enemy)
+        
+
+/*
+        val ghost1 = Enemy(250, 1000, false)
+        val ghost2 = Enemy(100, 250, false)
+
+        enemies.add(ghost1)
+        enemies.add(ghost2)
+*/
+    }
+
+
     //TODO initialize goldcoins also here
     fun initializeGoldcoins() {
 
-        /* my try on using random() (fra link på github....) - but not working
+        //random fra Ruth - virker
+        var minX: Int = 0
+        var maxX: Int = w - goldCoin.width
+        var minY: Int = 0
+        var maxY: Int = h - goldCoin.width
+        val random = Random
+        for (i in 0..10) {
+            var randomX: Int = random.nextInt(maxX - minX + 1) + minX
+            var randomY: Int = random.nextInt(maxY - minY + 1) + minY
+            coins.add(GoldCoin(randomX, randomY, false))
+        }
+        coinsInitialized = true
+
+
+
+/*
+        // Random fra link på github - but not working
         for (coin in 0..4){
             val coin = GoldCoin(0, 0, false)
-            coin.goldcoinx = Random().nextInt(950)
-            coin.goldcoiny = Random().nextInt(1000)
+            coin.goldcoinx = Random.nextInt(950)
+            coin.goldcoiny = Random.nextInt(1000)
             coins.add(coin)
         }
-        */
+
 
         //DO Stuff to initialize the array list with some coins.
         val coin1 = GoldCoin(150, 1250, false)
@@ -92,7 +147,7 @@ class Game(private var context: Context, view: TextView) {
         coins.add(coin10)
 
         coinsInitialized = true
-
+    */
     }
 
     //mangler noget her..
@@ -103,10 +158,11 @@ class Game(private var context: Context, view: TextView) {
         coinsInitialized = false
         points = 0
         pointsView.text = "${context.resources.getString(R.string.points)} $points"
-        gameView?.invalidate() //redraw screen
         coins.clear()
         running = true
         direction = 1
+        intializeEnemies()
+        gameView?.invalidate() //redraw screen
     }
 
     fun setSize(h: Int, w: Int) {
@@ -154,6 +210,48 @@ class Game(private var context: Context, view: TextView) {
     }
 
 
+    //moving the enemies
+    fun enemyRight(pixels: Int) {
+        //still within our boundaries?
+        for(enemy in enemies) {
+            if (enemy.enemyx + pixels + ghost.width < w) {
+                enemy.enemyx += pixels
+                gameView!!.invalidate()
+            }
+        }
+    }
+
+    fun enemyLeft(pixels: Int) {
+        //still within our boundaries?
+        for(enemy in enemies) {
+            if (enemy.enemyx - pixels > 0) {
+                enemy.enemyx -= pixels
+                gameView!!.invalidate()
+            }
+        }
+    }
+
+    fun enemyDown(pixels: Int) {
+        //still within our boundaries?
+        for(enemy in enemies) {
+            if (enemy.enemyy + pixels + ghost.height < h) {
+                enemy.enemyy += pixels
+                gameView!!.invalidate()
+            }
+        }
+    }
+
+    fun enemyUp(pixels: Int) {
+        //still within our boundaries?
+        for(enemy in enemies) {
+            if (enemy.enemyy - pixels > 0) {
+                enemy.enemyy -= pixels
+                gameView!!.invalidate()
+            }
+        }
+    }
+
+
 
     //Alt nedenunder er med kæmpe hjælp fra Annalee. Ved ikke helt om jeg vil kunne forklare det
     //Det er den "ikke nemme" løsning - så måske vi skal lave det om? - jeg har en tegning du skal se
@@ -166,28 +264,50 @@ class Game(private var context: Context, view: TextView) {
     fun doCollisionCheck() {
 
         //pacman
-        val R1 = pacBitmap.width / 2
-        val X1 = pacx + R1
-        val Y1 = pacy + R1
+        val r1 = pacBitmap.width / 2
+        val x1 = pacx + r1
+        val y1 = pacy + r1
+
+        //enemies
+        val r3 = ghost.width / 2
+        for (enemy in enemies.indices){
+            val x3 = enemies[enemy].enemyx + r3
+            val y3 = enemies[enemy].enemyy + r3
+            val dist = distance (x1, y1, x3, y3)
+            if (calcCircle(dist, r1, r3) && !enemies[enemy].isAlive) {
+                enemies[enemy].isAlive = true
+                Toast.makeText(context, "Game over", Toast.LENGTH_LONG).show()
+                newGame()
+            }
+        }
 
         //coins
-        val R2 = goldCoin.width / 2
+        val r2 = goldCoin.width / 2
         for (coin in coins.indices) {
-            val X2 = coins[coin].goldcoinx + R2
-            val Y2 = coins[coin].goldcoiny + R2
-            val dist = distance( X1, Y1, X2, Y2)
-            if (calcCircleIntersect(dist, R1, R2) && !coins[coin].taken) {
+            val x2 = coins[coin].goldcoinx + r2
+            val y2 = coins[coin].goldcoiny + r2
+            val dist = distance( x1, y1, x2, y2)
+            if (calcCircle(dist, r1, r2) && !coins[coin].taken) {
                 coins[coin].taken = true
                 points++
                 pointsView.text = "${context.resources.getString(R.string.points)} $points"
             }
         }
 
-        val coinsLeft: List<GoldCoin> = coins.filter { c -> c.taken == false}
-        if (coinsLeft.size == 0) {
+        val coinsLeft: List<GoldCoin> = coins.filter { c -> !c.taken }
+        if (coinsLeft.isEmpty()) {
             Toast.makeText(context, "Yay, you've won!!", Toast.LENGTH_LONG).show()
             newGame()
         }
+    }
+
+    fun winGame (): Boolean {
+        for (coin in coins){
+            if(!coin.taken){
+                return false
+            }
+        }
+        return true
     }
 
     fun distance (x1: Int, y1: Int, x2: Int, y2: Int): Double {
@@ -195,7 +315,7 @@ class Game(private var context: Context, view: TextView) {
         return sqrt(distSqrd)
     }
 
-    fun calcCircleIntersect(dist: Double, R1: Int, R2: Int) : Boolean {
+    fun calcCircle(dist: Double, R1: Int, R2: Int) : Boolean {
         return dist <= R1 + R2
     }
 

@@ -66,6 +66,13 @@ class GameView : View {
             }
         }
 
+        //looping through enemies and drawing them:
+        for (enemy in game!!.enemies){
+            if (!enemy.isAlive){
+                canvas.drawBitmap(game!!.ghost, enemy.enemyx.toFloat(), enemy.enemyy.toFloat(), paint)
+            }
+        }
+
 
         game?.doCollisionCheck()
         super.onDraw(canvas)

@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
     var myTimer: Timer = Timer() //set fra martins timeropgave
     var gameTimer: Timer = Timer()
-    var counter : Int = 60 //set fra martins timeropgave
+    var counter : Int = 0 //set fra martins timeropgave
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +55,17 @@ class MainActivity : AppCompatActivity(), OnClickListener {
             game?.direction = 3
         }
 
+
+        //my new game timer
+        game?.running = true
+        gameTimer.schedule(object : TimerTask() {
+            override fun run() {
+                timerTimeLeft()
+            }
+
+        }, 0, 1000)
+
+
         //make a new timer  - fra Martins timeropgaver
         game?.running = true
         myTimer.schedule(object : TimerTask() {
@@ -64,14 +75,6 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
         }, 0, 100)
 
-
-        //my new game timer
-        gameTimer.schedule(object : TimerTask() {
-            override fun run() {
-                timerTimeLeft()
-            }
-
-        }, 0, 1000)
     }
 
     //set fra martins timeropgave
@@ -98,23 +101,32 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
         if (game!!.running) {
             timeLeft.text = resources.getString(R.string.timeLeft, counter)
-            counter--
+            counter++
             if (game?.direction == 1) {
-                counter--
+                counter++
                 timeLeft.text = resources.getString(R.string.timeLeft, counter)
             }
-            if (game?.direction == 2) {
-                counter--
+            else if (game?.direction == 2) {
+                counter++
                 timeLeft.text = resources.getString(R.string.timeLeft, counter)
             }
-            if (game?.direction == 3) {
-                counter--
+            else if (game?.direction == 3) {
+                counter++
                 timeLeft.text = resources.getString(R.string.timeLeft, counter)
             }
-            if (game?.direction == 4) {
-                counter--
+            else if (game?.direction == 4) {
+                counter++
                 timeLeft.text = resources.getString(R.string.timeLeft, counter)
             }
+            if (counter >= 60){
+                game?.direction = 0
+                game?.running = false
+                Toast.makeText(this, "Game over", Toast.LENGTH_LONG).show()
+            }
+            if (game?.winGame() == true) {
+                Toast.makeText(this, "Yay - you've won the game!", Toast.LENGTH_LONG).show()
+            }
+
         }
     }
 
@@ -128,18 +140,22 @@ class MainActivity : AppCompatActivity(), OnClickListener {
             if (game?.direction==1)
             {
                 game?.movePacmanRight(20)
+                game?.enemyUp(10)
             }
             else if (game?.direction == 2)
             {
                 game?.movePacmanLeft(20)
+                game?.enemyDown(10)
             }
             else if (game!!.direction == 3)
             {
                 game?.movePacmanUp(20)
+                game?.enemyRight(10)
             }
             else if (game?.direction == 4)
             {
                 game?.movePacmanDown(20)
+                game?.enemyLeft(10)
             }
         }
     }
@@ -152,8 +168,6 @@ class MainActivity : AppCompatActivity(), OnClickListener {
             game?.running = false
         }
     }
-
-
 
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -173,7 +187,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         } else if (id == R.id.action_newGame) {
             Toast.makeText(this, "New Game clicked", Toast.LENGTH_LONG).show()
             game?.newGame()
-            counter = 60
+            counter = 0
             timerValue.text = getString(R.string.timerValue, counter)
             return true
         }
