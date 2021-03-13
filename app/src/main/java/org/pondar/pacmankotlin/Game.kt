@@ -4,11 +4,9 @@ package org.pondar.pacmankotlin
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import java.util.ArrayList
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.math.sqrt
 import kotlin.random.Random
 

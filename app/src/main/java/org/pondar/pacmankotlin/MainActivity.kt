@@ -12,7 +12,6 @@ import android.widget.TextView
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
-
 class MainActivity : AppCompatActivity(), OnClickListener {
 
     //reference to the game class.
