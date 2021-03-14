@@ -19,7 +19,7 @@ import kotlin.random.Random
 class Game(private var context: Context, view: TextView) {
 
     private var pointsView: TextView = view
-    private var points: Int = 0
+    var points: Int = 0
     var running = false //set fra martins timeropgave
     var direction = 1 //set fra martins timeropgave
 
@@ -34,6 +34,7 @@ class Game(private var context: Context, view: TextView) {
 
     //did we initialize the coins?
     var coinsInitialized = false
+    var enemiesInitialised = false
 
     //the list of goldcoins and enemies
     var coins = ArrayList<GoldCoin>()
@@ -59,7 +60,7 @@ class Game(private var context: Context, view: TextView) {
 
 
     //initialize enemies
-    fun intializeEnemies() {
+    fun initializeEnemies() {
 
         /*
         //random fra Ruth - virker ikke/app crasher
@@ -76,14 +77,18 @@ class Game(private var context: Context, view: TextView) {
         */
 
 
+
         //random fra github link
-        val enemy = Enemy(0, 0, false)
-        enemy.enemyx = Random.nextInt(900)
-        enemy.enemyy = Random.nextInt(400)
-        enemies.add(enemy)
-        
+        for(enemy in 0..2) {
+            val enemy = Enemy(0, 0, false)
+            enemy.enemyx = Random.nextInt(200)
+            enemy.enemyy = Random.nextInt(400)
+            enemies.add(enemy)
+        }
+
 
 /*
+        // not using Random
         val ghost1 = Enemy(250, 1000, false)
         val ghost2 = Enemy(100, 250, false)
 
@@ -111,16 +116,17 @@ class Game(private var context: Context, view: TextView) {
 
 
 
+
 /*
         // Random fra link på github - but not working
-        for (coin in 0..4){
+        for (coin in 0..10){
             val coin = GoldCoin(0, 0, false)
             coin.goldcoinx = Random.nextInt(950)
             coin.goldcoiny = Random.nextInt(1000)
             coins.add(coin)
         }
-
-
+*/
+/*
         //DO Stuff to initialize the array list with some coins.
         val coin1 = GoldCoin(150, 1250, false)
         val coin2 = GoldCoin(350, 1150, false)
@@ -145,7 +151,7 @@ class Game(private var context: Context, view: TextView) {
         coins.add(coin10)
 
         coinsInitialized = true
-    */
+*/
     }
 
     //mangler noget her..
@@ -157,9 +163,11 @@ class Game(private var context: Context, view: TextView) {
         points = 0
         pointsView.text = "${context.resources.getString(R.string.points)} $points"
         coins.clear()
+        enemies.clear()
+        initializeEnemies()
         running = true
         direction = 1
-        intializeEnemies()
+        enemiesInitialised = false
         gameView?.invalidate() //redraw screen
     }
 
@@ -299,6 +307,7 @@ class Game(private var context: Context, view: TextView) {
         }
     }
 
+    /*
     fun winGame (): Boolean {
         for (coin in coins){
             if(!coin.taken){
@@ -307,6 +316,7 @@ class Game(private var context: Context, view: TextView) {
         }
         return true
     }
+    */
 
     fun distance (x1: Int, y1: Int, x2: Int, y2: Int): Double {
         val distSqrd = ((x2 - x1) * (x2 - x1) * (y2 - y1) * (y2 - y1)).toDouble()

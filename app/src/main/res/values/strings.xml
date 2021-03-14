@@ -3,6 +3,7 @@
     <string name="points">Points:</string>
     <string name="move_right">Move Right</string>
     <string name="action_settings">Settings</string>
+    <string name="action_shareContent">Share</string>
     <string name="newgame">New Game</string>
     <string name="move_down">move down</string>
     <string name="move_up">move up</string>

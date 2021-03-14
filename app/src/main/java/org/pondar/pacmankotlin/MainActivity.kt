@@ -1,17 +1,21 @@
 package org.pondar.pacmankotlin
 
 
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.ActivityInfo
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View.OnClickListener
 import android.view.View
-import android.widget.TextView
+import android.view.View.OnClickListener
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
+
+
 class MainActivity : AppCompatActivity(), OnClickListener {
 
     //reference to the game class.
@@ -20,6 +24,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
     var myTimer: Timer = Timer() //set fra martins timeropgave
     var gameTimer: Timer = Timer()
     var counter : Int = 0 //set fra martins timeropgave
+    var countDown : Int = 60
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,6 +86,13 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         super.onStop()
         myTimer.cancel()
         gameTimer.cancel()
+
+        //save highscore
+        //setting preferences
+        val prefs = getSharedPreferences("pacman", Context.MODE_PRIVATE)
+        val editor: SharedPreferences.Editor = prefs.edit()
+        editor.putInt("points", counter)
+        editor.commit()
     }
 
 
@@ -99,31 +111,18 @@ class MainActivity : AppCompatActivity(), OnClickListener {
     private val timerSeconds = Runnable {
 
         if (game!!.running) {
-            timeLeft.text = resources.getString(R.string.timeLeft, counter)
-            counter++
-            if (game?.direction == 1) {
-                counter++
-                timeLeft.text = resources.getString(R.string.timeLeft, counter)
+            timeLeft.text = resources.getString(R.string.timeLeft, countDown)
+            countDown--
+            when (game?.direction) {
+                1 -> timeLeft.text = resources.getString(R.string.timeLeft, countDown)
+                2 -> timeLeft.text = resources.getString(R.string.timeLeft, countDown)
+                3 -> timeLeft.text = resources.getString(R.string.timeLeft, countDown)
+                4 -> timeLeft.text = resources.getString(R.string.timeLeft, countDown)
             }
-            else if (game?.direction == 2) {
-                counter++
-                timeLeft.text = resources.getString(R.string.timeLeft, counter)
-            }
-            else if (game?.direction == 3) {
-                counter++
-                timeLeft.text = resources.getString(R.string.timeLeft, counter)
-            }
-            else if (game?.direction == 4) {
-                counter++
-                timeLeft.text = resources.getString(R.string.timeLeft, counter)
-            }
-            if (counter >= 60){
+             if (countDown <= 0){
                 game?.direction = 0
                 game?.running = false
                 Toast.makeText(this, "Game over", Toast.LENGTH_LONG).show()
-            }
-            if (game?.winGame() == true) {
-                Toast.makeText(this, "Yay - you've won the game!", Toast.LENGTH_LONG).show()
             }
 
         }
@@ -136,25 +135,27 @@ class MainActivity : AppCompatActivity(), OnClickListener {
             counter++
             timerValue.text = resources.getString(R.string.timerValue, counter)
 
-            if (game?.direction==1)
+            when (game?.direction)
             {
-                game?.movePacmanRight(20)
-                game?.enemyUp(10)
-            }
-            else if (game?.direction == 2)
-            {
-                game?.movePacmanLeft(20)
-                game?.enemyDown(10)
-            }
-            else if (game!!.direction == 3)
-            {
-                game?.movePacmanUp(20)
-                game?.enemyRight(10)
-            }
-            else if (game?.direction == 4)
-            {
-                game?.movePacmanDown(20)
-                game?.enemyLeft(10)
+                1 -> {
+                    game?.movePacmanRight(20)
+                    game?.enemyUp(10)
+                }
+
+                2 -> {
+                    game?.movePacmanLeft(20)
+                    game?.enemyDown(10)
+                }
+
+                3 -> {
+                    game?.movePacmanUp(20)
+                    game?.enemyRight(10)
+                }
+
+                4 -> {
+                    game?.movePacmanDown(20)
+                    game?.enemyLeft(10)
+                }
             }
         }
     }
@@ -167,6 +168,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
             game?.running = false
         }
     }
+
 
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -187,7 +189,19 @@ class MainActivity : AppCompatActivity(), OnClickListener {
             Toast.makeText(this, "New Game clicked", Toast.LENGTH_LONG).show()
             game?.newGame()
             counter = 0
+            countDown = 60
             timerValue.text = getString(R.string.timerValue, counter)
+            return true
+        } else if (id == R.id.action_shareContent){
+            //Share content
+            val sendIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, "Your highscore is: ${game?.points}")
+                type = "text/plain"
+            }
+
+            val shareIntent = Intent.createChooser(sendIntent, "Share highscore to..")
+            startActivity(shareIntent)
             return true
         }
         return super.onOptionsItemSelected(item)
