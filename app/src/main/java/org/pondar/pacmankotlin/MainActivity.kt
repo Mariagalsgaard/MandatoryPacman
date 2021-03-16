@@ -21,9 +21,9 @@ class MainActivity : AppCompatActivity(), OnClickListener {
     //reference to the game class.
     private var game: Game? = null
 
-    var myTimer: Timer = Timer() //set fra martins timeropgave
+    var myTimer: Timer = Timer()
     var gameTimer: Timer = Timer()
-    var counter : Int = 0 //set fra martins timeropgave
+    var counter : Int = 0
     var countDown : Int = 60
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         }
 
 
-        //my new game timer
+        //new game timer
         game?.running = true
         gameTimer.schedule(object : TimerTask() {
             override fun run() {
@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         }, 0, 1000)
 
 
-        //make a new timer  - fra Martins timeropgaver
+        //make a new timer
         game?.running = true
         myTimer.schedule(object : TimerTask() {
             override fun run() {
@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
     }
 
-    //set fra martins timeropgave
+
     override fun onStop() {
         super.onStop()
         myTimer.cancel()
@@ -101,13 +101,13 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         this.runOnUiThread(timerSeconds)
     }
 
-    //set fra martins timeropgave
+
     private fun timerMethod() {
         this.runOnUiThread(timerTick)
     }
 
 
-    //til min nye timer
+    //til den nye timer
     private val timerSeconds = Runnable {
 
         if (game!!.running) {
@@ -129,7 +129,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
     }
 
 
-    //set fra martins timeropgave
+
     private val timerTick = Runnable {
         if (game!!.running) {
             counter++
@@ -160,7 +160,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         }
     }
 
-    //set fra martins timeropgave
+
     override fun onClick(v: View) {
         if (v.id == R.id.continueButton) {
             game?.running = true

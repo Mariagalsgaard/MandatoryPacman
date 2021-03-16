@@ -8,34 +8,36 @@
 
     <LinearLayout
         android:id="@+id/buttons"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
+        >
 
         <Button
             android:id="@+id/moveLeft"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/move_left" />
+            android:text="@string/move_left"/>
 
         <Button
             android:id="@+id/moveUp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/move_up" />
+            android:text="@string/move_up"/>
 
         <Button
             android:id="@+id/moveDown"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/move_down" />
+            android:text="@string/move_down"/>
 
         <Button
             android:id="@+id/moveRight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/move_right" />
+            android:text="@string/move_right"/>
 
     </LinearLayout>
 

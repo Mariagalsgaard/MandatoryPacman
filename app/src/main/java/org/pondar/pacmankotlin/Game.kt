@@ -62,102 +62,30 @@ class Game(private var context: Context, view: TextView) {
     //initialize enemies
     fun initializeEnemies() {
 
-        /*
-        //random fra Ruth - virker ikke/app crasher
-        var minX: Int = 0
-        var maxX: Int = w - ghost.width
-        var minY: Int = 0
-        var maxY: Int = h - ghost.width
-        val random = Random
-        for (i in 0..10) {
-            var randomX: Int = random.nextInt(maxX - minX + 1) + minX
-            var randomY: Int = random.nextInt(maxY - minY + 1) + minY
-            enemies.add(Enemy(randomX, randomY, false))
-        }
-        */
-
-
-
-        //random fra github link
-        for(enemy in 0..2) {
             val enemy = Enemy(0, 0, false)
-            enemy.enemyx = Random.nextInt(200)
-            enemy.enemyy = Random.nextInt(400)
+            enemy.enemyx = Random.nextInt(900)
+            enemy.enemyy = Random.nextInt(1000)
             enemies.add(enemy)
-        }
-
-
-/*
-        // not using Random
-        val ghost1 = Enemy(250, 1000, false)
-        val ghost2 = Enemy(100, 250, false)
-
-        enemies.add(ghost1)
-        enemies.add(ghost2)
-*/
     }
 
 
     //TODO initialize goldcoins also here
     fun initializeGoldcoins() {
 
-        //random fra Ruth - virker
-        var minX: Int = 0
-        var maxX: Int = w - goldCoin.width
-        var minY: Int = 0
-        var maxY: Int = h - goldCoin.width
-        val random = Random
-        for (i in 0..10) {
-            var randomX: Int = random.nextInt(maxX - minX + 1) + minX
-            var randomY: Int = random.nextInt(maxY - minY + 1) + minY
-            coins.add(GoldCoin(randomX, randomY, false))
-        }
-        coinsInitialized = true
-
-
-
-
-/*
-        // Random fra link på github - but not working
         for (coin in 0..10){
             val coin = GoldCoin(0, 0, false)
             coin.goldcoinx = Random.nextInt(950)
-            coin.goldcoiny = Random.nextInt(1000)
+            coin.goldcoiny = Random.nextInt(150 , 1500)
             coins.add(coin)
         }
-*/
-/*
-        //DO Stuff to initialize the array list with some coins.
-        val coin1 = GoldCoin(150, 1250, false)
-        val coin2 = GoldCoin(350, 1150, false)
-        val coin3 = GoldCoin(50, 1075, false)
-        val coin4 = GoldCoin(250, 1175, false)
-        val coin5 = GoldCoin(450, 1000, false)
-        val coin6 = GoldCoin(550, 1325, false)
-        val coin7 = GoldCoin(175, 1260, false)
-        val coin8 = GoldCoin(190, 1265, false)
-        val coin9 = GoldCoin(90, 1245, false)
-        val coin10 = GoldCoin(145, 1235, false)
-
-        coins.add(coin1)
-        coins.add(coin2)
-        coins.add(coin3)
-        coins.add(coin4)
-        coins.add(coin5)
-        coins.add(coin6)
-        coins.add(coin7)
-        coins.add(coin8)
-        coins.add(coin9)
-        coins.add(coin10)
-
         coinsInitialized = true
-*/
+
     }
 
-    //mangler noget her..
+
     fun newGame() {
-        pacx = 50
-        pacy = 400 //just some starting coordinates - you can change this.
+        pacx = 400
+        pacy = 700 //just some starting coordinates - you can change this.
         //reset the points
         coinsInitialized = false
         points = 0
@@ -259,9 +187,6 @@ class Game(private var context: Context, view: TextView) {
 
 
 
-    //Alt nedenunder er med kæmpe hjælp fra Annalee. Ved ikke helt om jeg vil kunne forklare det
-    //Det er den "ikke nemme" løsning - så måske vi skal lave det om? - jeg har en tegning du skal se
-
     //TODO check if the pacman touches a gold coin
     //and if yes, then update the neccesseary data
     //for the gold coins and the points
@@ -307,17 +232,6 @@ class Game(private var context: Context, view: TextView) {
         }
     }
 
-    /*
-    fun winGame (): Boolean {
-        for (coin in coins){
-            if(!coin.taken){
-                return false
-            }
-        }
-        return true
-    }
-    */
-
     fun distance (x1: Int, y1: Int, x2: Int, y2: Int): Double {
         val distSqrd = ((x2 - x1) * (x2 - x1) * (y2 - y1) * (y2 - y1)).toDouble()
         return sqrt(distSqrd)
@@ -328,3 +242,15 @@ class Game(private var context: Context, view: TextView) {
     }
 
 }
+
+
+/*
+    fun winGame (): Boolean {
+        for (coin in coins){
+            if(!coin.taken){
+                return false
+            }
+        }
+        return true
+    }
+    */
