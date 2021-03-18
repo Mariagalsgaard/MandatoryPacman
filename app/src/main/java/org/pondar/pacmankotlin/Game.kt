@@ -242,15 +242,3 @@ class Game(private var context: Context, view: TextView) {
     }
 
 }
-
-
-/*
-    fun winGame (): Boolean {
-        for (coin in coins){
-            if(!coin.taken){
-                return false
-            }
-        }
-        return true
-    }
-    */
