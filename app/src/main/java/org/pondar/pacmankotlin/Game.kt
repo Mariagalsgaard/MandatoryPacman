@@ -74,7 +74,7 @@ class Game(private var context: Context, view: TextView) {
 
         for (coin in 0..10){
             val coin = GoldCoin(0, 0, false)
-            coin.goldcoinx = Random.nextInt(950)
+            coin.goldcoinx = Random.nextInt( 950)
             coin.goldcoiny = Random.nextInt(150 , 1500)
             coins.add(coin)
         }
